@@ -1,0 +1,20 @@
+{
+  "name": "legends-of-the-shattered-realm",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Offline single-player idle/incremental MMORPG",
+  "main": "dist/main/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "vitest": "^2.0.0",
+    "@types/node": "^20.0.0"
+  }
+}

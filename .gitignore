@@ -34,6 +34,11 @@ npm-debug.log*
 saves/
 *.save
 *.bak
+*.db
+*.db-journal
+*.db-wal
+*.db.bak
+*.db.premigration.bak
 
 # Asset generation temp files
 *.tmp
