@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Build outputs
+dist/
+build/
+out/
+*.exe
+*.app
+*.dmg
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment & secrets
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# Game-specific
+saves/
+*.save
+*.bak
+
+# Asset generation temp files
+*.tmp
+*.cache
+
+# Coverage & testing
+coverage/
+.nyc_output/
+
+# CodeGraphContext
+.cgcignore

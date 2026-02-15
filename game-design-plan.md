@@ -509,4 +509,12 @@ Master all professions → Collect all cosmetics → Await new content
 
 ---
 
-*This document is a living design plan. All numbers, names, and specifics are subject to iteration and playtesting.*
+How to do asset generation? Be a hi-fi ASCII/ANSI type of game (like games of qud) or is pixelart feasable for this project?
+
+Fun loops in the game, emulate the feeling of old school high fantsy (e.g 90s), how to?
+
+How to keep players active in the game while keeping the core idle concept?
+
+What tech stack?
+
+Offline and no monetization.
