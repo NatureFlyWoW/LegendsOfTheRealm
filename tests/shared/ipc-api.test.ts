@@ -1,17 +1,15 @@
 // tests/shared/ipc-api.test.ts
 import { describe, it, expect } from "vitest";
 import { IPC_CHANNELS } from "@shared/ipc-api";
-import type {
-  GameStateDelta, EngineCommand, GameAPI,
-} from "@shared/ipc-api";
+import type { GameStateDelta, SaveSlotInfo } from "@shared/ipc-api";
 
 describe("IPC channel names", () => {
-  it("has all required channels", () => {
-    expect(IPC_CHANNELS.STATE_DELTA).toBe("engine:state-delta");
-    expect(IPC_CHANNELS.COMBAT_EVENTS).toBe("engine:combat-events");
-    expect(IPC_CHANNELS.NOTIFICATION).toBe("engine:notification");
+  it("has all Phase 2 channels", () => {
     expect(IPC_CHANNELS.COMMAND).toBe("engine:command");
-    expect(IPC_CHANNELS.WELCOME_BACK).toBe("engine:welcome-back");
+    expect(IPC_CHANNELS.QUERY).toBe("engine:query");
+    expect(IPC_CHANNELS.GAME_EVENT).toBe("game:event");
+    expect(IPC_CHANNELS.GAME_TICK).toBe("game:tick");
+    expect(IPC_CHANNELS.COMBAT_EVENTS).toBe("game:combat-events");
   });
 });
 
@@ -27,15 +25,10 @@ describe("GameStateDelta uses Record not Map", () => {
   });
 });
 
-describe("EngineCommand uses characterId not charId", () => {
-  it("EQUIP_ITEM uses characterId", () => {
-    const cmd: EngineCommand = {
-      type: "EQUIP_ITEM",
-      characterId: 1,
-      itemInstanceId: 42,
-      slot: "main_hand" as any,
-    };
-    expect(cmd.characterId).toBe(1);
-    expect((cmd as any).charId).toBeUndefined();
+describe("SaveSlotInfo", () => {
+  it("has path and name fields", () => {
+    const slot: SaveSlotInfo = { path: "/saves/test.db", name: "test" };
+    expect(slot.path).toBe("/saves/test.db");
+    expect(slot.name).toBe("test");
   });
 });
