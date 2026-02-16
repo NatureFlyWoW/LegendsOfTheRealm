@@ -1,0 +1,202 @@
+[
+  {
+    "id": "warrior",
+    "name": "Warrior",
+    "description": "A mighty melee combatant who wields rage to fuel devastating attacks. Warriors can tank with unbreakable defenses, execute with brutal force, or whirlwind through enemies in a berserker fury.",
+    "resourceType": "rage",
+    "armorProficiency": ["plate", "mail", "leather", "cloth"],
+    "weaponProficiency": ["sword_1h", "sword_2h", "axe_1h", "axe_2h", "mace_1h", "mace_2h", "polearm", "shield"],
+    "baseStats": {
+      "strength": 25,
+      "agility": 15,
+      "intellect": 8,
+      "stamina": 22,
+      "spirit": 10
+    },
+    "perLevelGains": {
+      "strength": 2.5,
+      "agility": 1.0,
+      "intellect": 0.5,
+      "stamina": 2.0,
+      "spirit": 0.8
+    },
+    "classBaseHp": 100,
+    "classBaseMana": 0,
+    "specs": ["protection", "arms", "fury"]
+  },
+  {
+    "id": "mage",
+    "name": "Mage",
+    "description": "A master of arcane magic who commands the elements with devastating power. Mages rain fire from the sky, freeze enemies solid, or manipulate raw arcane energy to obliterate foes.",
+    "resourceType": "mana",
+    "armorProficiency": ["cloth"],
+    "weaponProficiency": ["staff", "wand", "dagger", "sword_1h"],
+    "baseStats": {
+      "strength": 5,
+      "agility": 10,
+      "intellect": 28,
+      "stamina": 12,
+      "spirit": 20
+    },
+    "perLevelGains": {
+      "strength": 0.3,
+      "agility": 0.5,
+      "intellect": 2.8,
+      "stamina": 1.0,
+      "spirit": 1.8
+    },
+    "classBaseHp": 50,
+    "classBaseMana": 200,
+    "specs": ["fire", "frost", "arcane"]
+  },
+  {
+    "id": "cleric",
+    "name": "Cleric",
+    "description": "A divine champion who channels holy power to heal allies and smite enemies. Clerics can restore health with sacred light, shield allies with divine barriers, or deliver righteous judgment in melee combat.",
+    "resourceType": "mana",
+    "armorProficiency": ["mail", "leather", "cloth"],
+    "weaponProficiency": ["mace_1h", "mace_2h", "staff", "shield"],
+    "baseStats": {
+      "strength": 18,
+      "agility": 10,
+      "intellect": 20,
+      "stamina": 20,
+      "spirit": 22
+    },
+    "perLevelGains": {
+      "strength": 1.5,
+      "agility": 0.8,
+      "intellect": 2.0,
+      "stamina": 1.8,
+      "spirit": 2.2
+    },
+    "classBaseHp": 80,
+    "classBaseMana": 150,
+    "specs": ["holy", "discipline", "retribution"]
+  },
+  {
+    "id": "rogue",
+    "name": "Rogue",
+    "description": "A deadly assassin who strikes from the shadows with lethal precision. Rogues use stealth, poisons, and combo points to dispatch enemies with ruthless efficiency.",
+    "resourceType": "energy",
+    "armorProficiency": ["leather", "cloth"],
+    "weaponProficiency": ["dagger", "sword_1h", "mace_1h", "axe_1h"],
+    "baseStats": {
+      "strength": 12,
+      "agility": 28,
+      "intellect": 5,
+      "stamina": 18,
+      "spirit": 10
+    },
+    "perLevelGains": {
+      "strength": 1.0,
+      "agility": 2.8,
+      "intellect": 0.3,
+      "stamina": 1.6,
+      "spirit": 0.7
+    },
+    "classBaseHp": 70,
+    "classBaseMana": 0,
+    "specs": ["assassination", "combat", "subtlety"]
+  },
+  {
+    "id": "ranger",
+    "name": "Ranger",
+    "description": "A master hunter who commands beasts and rains arrows from afar. Rangers excel at ranged combat, pet management, and wilderness survival.",
+    "resourceType": "focus",
+    "armorProficiency": ["mail", "leather", "cloth"],
+    "weaponProficiency": ["bow", "sword_1h", "axe_1h", "dagger", "polearm"],
+    "baseStats": {
+      "strength": 12,
+      "agility": 25,
+      "intellect": 10,
+      "stamina": 18,
+      "spirit": 12
+    },
+    "perLevelGains": {
+      "strength": 0.8,
+      "agility": 2.5,
+      "intellect": 0.8,
+      "stamina": 1.6,
+      "spirit": 1.0
+    },
+    "classBaseHp": 70,
+    "classBaseMana": 0,
+    "specs": ["marksmanship", "beast_mastery", "survival"]
+  },
+  {
+    "id": "druid",
+    "name": "Druid",
+    "description": "A shapeshifter who commands nature's fury and restoration. Druids can heal as nature's guardian, savage enemies in feral form, or call down the wrath of the stars.",
+    "resourceType": "mana",
+    "armorProficiency": ["leather", "cloth"],
+    "weaponProficiency": ["staff", "mace_1h", "mace_2h", "dagger", "polearm"],
+    "baseStats": {
+      "strength": 14,
+      "agility": 14,
+      "intellect": 22,
+      "stamina": 16,
+      "spirit": 20
+    },
+    "perLevelGains": {
+      "strength": 1.2,
+      "agility": 1.2,
+      "intellect": 2.2,
+      "stamina": 1.4,
+      "spirit": 1.8
+    },
+    "classBaseHp": 70,
+    "classBaseMana": 130,
+    "specs": ["restoration_druid", "feral", "balance"]
+  },
+  {
+    "id": "necromancer",
+    "name": "Necromancer",
+    "description": "A master of death magic who commands demons and curses enemies with shadow. Necromancers drain life, summon infernal servants, and unleash destructive shadow magic.",
+    "resourceType": "mana",
+    "armorProficiency": ["cloth"],
+    "weaponProficiency": ["staff", "wand", "dagger", "sword_1h"],
+    "baseStats": {
+      "strength": 5,
+      "agility": 8,
+      "intellect": 26,
+      "stamina": 14,
+      "spirit": 18
+    },
+    "perLevelGains": {
+      "strength": 0.3,
+      "agility": 0.4,
+      "intellect": 2.6,
+      "stamina": 1.2,
+      "spirit": 1.6
+    },
+    "classBaseHp": 50,
+    "classBaseMana": 180,
+    "specs": ["affliction", "demonology", "destruction"]
+  },
+  {
+    "id": "shaman",
+    "name": "Shaman",
+    "description": "A spiritual warrior who channels the elements and ancestral spirits. Shamans can call lightning storms, enhance melee attacks with elemental fury, or restore allies with healing waves.",
+    "resourceType": "mana",
+    "armorProficiency": ["mail", "leather", "cloth"],
+    "weaponProficiency": ["mace_1h", "mace_2h", "axe_1h", "axe_2h", "staff", "dagger", "shield"],
+    "baseStats": {
+      "strength": 16,
+      "agility": 12,
+      "intellect": 20,
+      "stamina": 18,
+      "spirit": 18
+    },
+    "perLevelGains": {
+      "strength": 1.4,
+      "agility": 1.0,
+      "intellect": 2.0,
+      "stamina": 1.6,
+      "spirit": 1.6
+    },
+    "classBaseHp": 75,
+    "classBaseMana": 140,
+    "specs": ["elemental", "enhancement", "restoration_shaman"]
+  }
+]
