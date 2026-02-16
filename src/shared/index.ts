@@ -1,3 +1,7 @@
 // Shared types and utilities for Legends of the Shattered Realm
-// This file ensures TypeScript can compile the project with zero errors.
-export {};
+export * from "./enums";
+export * from "./types";
+export * from "./combat-interfaces";
+export * from "./ipc-api";
+export * from "./utils";
+export * from "./events";
