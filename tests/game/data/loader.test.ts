@@ -26,6 +26,41 @@ describe("loadGameData", () => {
     expect(data.stats.health.staminaMultiplier).toBe(10);
   });
 
+  test("abilities has 16 entries", () => {
+    const data = loadGameData();
+    expect(data.abilities).toHaveLength(16);
+  });
+
+  test("items has entries", () => {
+    const data = loadGameData();
+    expect(data.items.length).toBeGreaterThan(0);
+  });
+
+  test("zones has 1 entry", () => {
+    const data = loadGameData();
+    expect(data.zones).toHaveLength(1);
+  });
+
+  test("mobs has 5 entries", () => {
+    const data = loadGameData();
+    expect(data.mobs).toHaveLength(5);
+  });
+
+  test("quests has 5 entries", () => {
+    const data = loadGameData();
+    expect(data.quests).toHaveLength(5);
+  });
+
+  test("lootTables has 6 entries", () => {
+    const data = loadGameData();
+    expect(data.lootTables).toHaveLength(6);
+  });
+
+  test("xpPerLevel has 59 entries", () => {
+    const data = loadGameData();
+    expect(data.xpPerLevel).toHaveLength(59);
+  });
+
   test("caching: second call returns same object", () => {
     const data1 = loadGameData();
     const data2 = loadGameData();
