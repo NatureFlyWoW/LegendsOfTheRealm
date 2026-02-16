@@ -2,6 +2,8 @@ import { create } from "zustand";
 import type { CharacterState } from "@shared/types";
 import type { CombatEvent } from "@shared/combat-interfaces";
 import type { ClassName, RaceName, GearSlot } from "@shared/enums";
+import type { ZoneId } from "@shared/types";
+import { ActivityType } from "@shared/enums";
 
 // ============================================================
 // Store State Types
@@ -40,7 +42,7 @@ export interface GameStoreState {
   loadRoster(): Promise<void>;
   createCharacter(name: string, race: RaceName, className: ClassName): Promise<void>;
   selectCharacter(id: number): void;
-  startGrinding(zoneId: string): Promise<void>;
+  startGrinding(zoneId: ZoneId): Promise<void>;
   stopGrinding(): Promise<void>;
   equipItem(bagSlot: number): Promise<void>;
   unequipItem(gearSlot: GearSlot): Promise<void>;
@@ -105,13 +107,13 @@ export const useGameStore = create<GameStoreState>((set, get) => ({
     set({ activeCharacterId: id });
   },
 
-  startGrinding: async (zoneId: string) => {
+  startGrinding: async (zoneId: ZoneId) => {
     const { activeCharacterId } = get();
     if (activeCharacterId === null) return;
 
     set({ isLoading: true });
     try {
-      await window.api.character.setActivity(activeCharacterId, "grinding", zoneId);
+      await window.api.character.setActivity(activeCharacterId, ActivityType.Grinding, zoneId);
       set({
         zoneState: {
           grinding: true,

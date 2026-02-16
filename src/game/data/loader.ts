@@ -67,8 +67,19 @@ export function loadGameData(): GameData {
   const lootTables = (lootTablesJson as unknown[]).map(lt => lootTableSchema.parse(lt));
   const xpPerLevel = (xpCurvesJson as { xpPerLevel: number[] }).xpPerLevel;
 
-  cachedData = { races, classes, stats, abilities, items, zones, mobs, quests, lootTables, xpPerLevel };
-  return cachedData;
+  cachedData = {
+    races,
+    classes,
+    stats,
+    abilities: abilities as unknown as AbilityDefinition[],
+    items: items as unknown as ItemDefinition[],
+    zones: zones as unknown as ZoneDefinition[],
+    mobs: mobs as unknown as MobDefinition[],
+    quests: quests as unknown as QuestDefinition[],
+    lootTables: lootTables as unknown as LootTable[],
+    xpPerLevel,
+  };
+  return cachedData!;
 }
 
 /**

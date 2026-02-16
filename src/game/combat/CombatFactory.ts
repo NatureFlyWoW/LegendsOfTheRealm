@@ -18,7 +18,8 @@ import type {
   MobDefinition,
   MobAbility,
 } from "@shared/definitions";
-import type { GearSlot, ResourceType, DamageType } from "@shared/enums";
+import type { GearSlot, DamageType } from "@shared/enums";
+import { ResourceType } from "@shared/enums";
 import {
   calculateMaxHp,
   calculateMaxMana,
@@ -186,7 +187,7 @@ export function buildPlayerEntity(
   const equipment: EquipmentSummary = {
     weaponSpeed,
     weaponDps: mainHandWeapon
-      ? ((mainHandWeapon.weaponDamageMin + mainHandWeapon.weaponDamageMax) / 2) / weaponSpeed
+      ? ((mainHandWeapon.weaponDamageMin! + mainHandWeapon.weaponDamageMax!) / 2) / weaponSpeed
       : 0,
     offhandSpeed,
     offhandDps: offHandWeapon
@@ -262,7 +263,7 @@ export function buildMobEntity(mob: MobDefinition): CombatEntity {
     .sort((a, b) => a.priority - b.priority);
 
   // 4. Set up resource state (mobs use mana if they have it, otherwise rage)
-  const resourceType: ResourceType = mob.mana !== undefined && mob.mana > 0 ? "mana" : "rage";
+  const resourceType: ResourceType = mob.mana !== undefined && mob.mana > 0 ? ResourceType.Mana : ResourceType.Rage;
   const resources: ResourceState = {
     type: resourceType,
     current: resourceType === "mana" ? mob.mana ?? 0 : 0,
@@ -366,8 +367,6 @@ function getMaxResourceForType(resourceType: ResourceType): number {
     case "energy":
       return 100;
     case "focus":
-      return 100;
-    case "runic_power":
       return 100;
     default:
       return 100;

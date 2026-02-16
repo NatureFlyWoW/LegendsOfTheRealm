@@ -187,7 +187,7 @@ export class ActivityManager {
       if (!questDef) continue;
 
       for (const objective of questDef.objectives) {
-        if (objective.type === "kill") {
+        if (objective.type === "kill" && objective.targetId) {
           questMobIds.add(objective.targetId);
         }
       }

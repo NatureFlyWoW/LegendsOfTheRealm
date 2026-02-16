@@ -72,7 +72,7 @@ export const CombatLog: React.FC<CombatLogProps> = ({ className = "" }) => {
  * - level-up → bright white, bold (not in current CombatEvent types, placeholder)
  * - quest progress → amber text (not in current CombatEvent types, placeholder)
  */
-function formatCombatEvent(event: CombatEvent): JSX.Element {
+function formatCombatEvent(event: CombatEvent): React.ReactElement {
   const baseClass = "whitespace-pre-wrap break-words";
 
   switch (event.type) {

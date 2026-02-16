@@ -183,7 +183,7 @@ export class InventoryService {
     let gearStats: Record<string, number> = {};
     for (const item of equippedItems) {
       for (const [stat, value] of Object.entries(item.stats)) {
-        gearStats[stat] = (gearStats[stat] || 0) + value;
+        gearStats[stat] = (gearStats[stat] || 0) + (value ?? 0);
       }
     }
 

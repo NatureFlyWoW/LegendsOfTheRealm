@@ -183,7 +183,7 @@ export function ZoneView() {
               {/* Quest objectives */}
               <div className="space-y-1 mt-2">
                 {quest.objectives.map((obj, idx) => {
-                  const currentProgress = qp.objectives[obj.targetId] || 0;
+                  const currentProgress = obj.targetId ? (qp.objectives[obj.targetId] || 0) : 0;
                   const isComplete = currentProgress >= obj.requiredCount;
 
                   return (
