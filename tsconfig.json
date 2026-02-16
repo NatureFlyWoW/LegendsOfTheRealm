@@ -12,8 +12,7 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
+    "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
       "@shared/*": ["src/shared/*"],
@@ -22,6 +21,6 @@
       "@renderer/*": ["src/renderer/*"]
     }
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules", "dist", "out"]
 }
