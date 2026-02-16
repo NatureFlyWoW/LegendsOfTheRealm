@@ -1,8 +1,7 @@
 import React from "react";
 import { useGameStore } from "@renderer/stores/gameStore";
-import { getXpForLevel } from "@game/data";
+import { getXpForLevel, getItem } from "@game/data";
 import { GearSlot, QualityTier } from "@shared/enums";
-import type { ItemInstance } from "@shared/types";
 
 // Quality tier to Tailwind color mapping
 const QUALITY_COLORS: Record<QualityTier, string> = {
@@ -57,6 +56,7 @@ export function CharacterSheet() {
   const activeCharacterId = useGameStore((s) => s.activeCharacterId);
   const characters = useGameStore((s) => s.characters);
   const equipItem = useGameStore((s) => s.equipItem);
+  const unequipItem = useGameStore((s) => s.unequipItem);
 
   const character = characters.find((c) => c.id === activeCharacterId);
 
@@ -71,8 +71,18 @@ export function CharacterSheet() {
   const xpRequired = getXpForLevel(character.level);
   const xpPercent = xpRequired > 0 ? (character.xp / xpRequired) * 100 : 0;
 
-  // Mock inventory items for now (will be real data from IPC later)
-  const inventoryItems: Array<ItemInstance & { quality: QualityTier; name: string }> = [];
+  // Real inventory items from character bags
+  const bags = character.bags || [];
+  const inventoryItems = bags
+    .filter(item => item.bagSlot !== null && item.equippedSlot === null)
+    .map(item => {
+      const def = getItem(item.templateId);
+      return {
+        ...item,
+        name: def?.name ?? "Unknown Item",
+        quality: def?.quality ?? QualityTier.Common,
+      };
+    });
 
   return (
     <div className="flex flex-col h-full p-4 gap-4 overflow-auto">
@@ -161,17 +171,18 @@ export function CharacterSheet() {
         <h2 className="text-sm font-bold text-amber-400 mb-2">Equipment</h2>
         <div className="grid grid-cols-2 gap-2 text-xs">
           {GEAR_SLOTS.map((slot) => {
-            const equippedSlot = character.equipment[slot];
-            const hasItem = equippedSlot !== null;
+            const equippedItem = bags.find(i => i.equippedSlot === slot);
+            const itemDef = equippedItem ? getItem(equippedItem.templateId) : null;
 
             return (
               <div
                 key={slot}
-                className="bg-gray-900 border border-gray-700 rounded p-2 flex items-center gap-2"
+                className="bg-gray-900 border border-gray-700 rounded p-2 flex items-center gap-2 cursor-pointer hover:bg-gray-800"
+                onClick={() => equippedItem && unequipItem(slot)}
               >
                 <span className="text-gray-500 w-20 shrink-0">{SLOT_LABELS[slot]}:</span>
-                <span className={hasItem ? "text-gray-300" : "text-gray-600 italic"}>
-                  {hasItem ? `Item ${equippedSlot}` : "Empty"}
+                <span className={itemDef ? QUALITY_COLORS[itemDef.quality] : "text-gray-600 italic"}>
+                  {itemDef ? itemDef.name : "Empty"}
                 </span>
               </div>
             );
