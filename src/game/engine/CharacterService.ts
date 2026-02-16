@@ -1,6 +1,6 @@
 import { Kysely, SqliteDialect } from "kysely";
 import type { DatabaseSchema } from "@main/database/schema";
-import type { CharacterState, EffectiveStats } from "@shared/types";
+import type { CharacterState, EffectiveStats, ItemInstance } from "@shared/types";
 import type { RaceName, ClassName, GearSlot, ActivityType } from "@shared/enums";
 import { getClass, getRace } from "@game/data";
 import { InventoryService } from "./InventoryService";
@@ -150,6 +150,7 @@ export class CharacterService {
       talentPoints: {},
       equipment,
       stats: effectiveStats,
+      bags: [],
       companionClears: {},
       createdAt: now,
       lastPlayedAt: now,
@@ -179,7 +180,7 @@ export class CharacterService {
   }
 
   /**
-   * Load all characters.
+   * Load all characters (including bags from items table).
    *
    * @returns Array of all CharacterState records
    */
@@ -189,11 +190,15 @@ export class CharacterService {
       .selectAll()
       .execute();
 
-    return rows.map(row => this.rowToState(row));
+    const characters = rows.map(row => this.rowToState(row));
+    for (const char of characters) {
+      char.bags = await this.loadBags(char.id);
+    }
+    return characters;
   }
 
   /**
-   * Save character state to database.
+   * Save character state to database (including bags to items table).
    *
    * @param state - CharacterState to persist
    */
@@ -218,6 +223,8 @@ export class CharacterService {
       })
       .where("id", "=", state.id)
       .execute();
+
+    await this.saveBags(state.id, state.bags);
   }
 
   /**
@@ -230,6 +237,55 @@ export class CharacterService {
       .deleteFrom("characters")
       .where("id", "=", id)
       .execute();
+  }
+
+  /**
+   * Load bag items for a character from the items table.
+   */
+  async loadBags(characterId: number): Promise<ItemInstance[]> {
+    const rows = await this.kysely
+      .selectFrom("items")
+      .selectAll()
+      .where("character_id", "=", characterId)
+      .execute();
+
+    return rows.map(row => ({
+      id: row.id,
+      templateId: row.template_id as any,
+      characterId: row.character_id,
+      bagSlot: row.bag_slot,
+      equippedSlot: (row.equipped_slot as GearSlot | null),
+      durability: row.durability,
+      enchantId: row.enchant_id ?? undefined,
+      gemIds: row.gem_ids ? JSON.parse(row.gem_ids) : undefined,
+    }));
+  }
+
+  /**
+   * Save bag items for a character to the items table.
+   */
+  async saveBags(characterId: number, items: ItemInstance[]): Promise<void> {
+    // Delete existing items for this character
+    await this.kysely
+      .deleteFrom("items")
+      .where("character_id", "=", characterId)
+      .execute();
+
+    // Insert current items
+    for (const item of items) {
+      await this.kysely
+        .insertInto("items")
+        .values({
+          template_id: item.templateId as string,
+          character_id: characterId,
+          bag_slot: item.bagSlot,
+          equipped_slot: item.equippedSlot,
+          durability: item.durability,
+          enchant_id: item.enchantId ?? null,
+          gem_ids: item.gemIds ? JSON.stringify(item.gemIds) : null,
+        })
+        .execute();
+    }
   }
 
   /**
@@ -275,6 +331,7 @@ export class CharacterService {
       talentPoints: JSON.parse(row.talent_points),
       equipment,
       stats,
+      bags: [], // Loaded separately via loadBags
       companionClears: JSON.parse(row.companion_clears),
       createdAt: row.created_at,
       lastPlayedAt: row.last_played_at,

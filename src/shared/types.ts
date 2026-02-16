@@ -92,6 +92,7 @@ export interface CharacterState {
   talentPoints: Record<string, Record<TalentId, number>>;
   equipment: Record<GearSlot, number | null>;
   stats: EffectiveStats;
+  bags: ItemInstance[];
   companionClears: Record<string, number>;
   createdAt: number;
   lastPlayedAt: number;

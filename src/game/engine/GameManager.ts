@@ -115,8 +115,17 @@ export class GameManager {
       this.dirtyCharacters.add(character.id);
     }
 
-    // Loot was already handled by ActivityManager, which updates character state
-    // Quest updates were already handled by ActivityManager
+    // Add loot items to character's bags
+    if (result.loot && result.loot.items.length > 0) {
+      for (const item of result.loot.items) {
+        const nextSlot = this.findNextBagSlot(character);
+        if (nextSlot !== -1) {
+          item.bagSlot = nextSlot;
+          character.bags.push(item);
+        }
+        // If no slots available, loot is lost (bag full)
+      }
+    }
 
     // Mark character as dirty if anything changed
     if (result.events.length > 0 || result.mobKilled || result.loot || result.questUpdate) {
@@ -274,6 +283,21 @@ export class GameManager {
     const result = this.lastTickResult;
     this.lastTickResult = null;
     return result;
+  }
+
+  /**
+   * Find the next available bag slot for a character.
+   */
+  private findNextBagSlot(character: CharacterState): number {
+    const usedSlots = new Set(
+      character.bags
+        .filter(i => i.bagSlot !== null)
+        .map(i => i.bagSlot)
+    );
+    for (let i = 0; i < 16; i++) {
+      if (!usedSlots.has(i)) return i;
+    }
+    return -1;
   }
 
   /**
