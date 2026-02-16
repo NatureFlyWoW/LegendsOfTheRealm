@@ -36,6 +36,47 @@ export function AppShell() {
     loadRoster();
   }, [loadRoster]);
 
+  // Subscribe to game events from main process
+  useEffect(() => {
+    // On each tick, refresh active character state from engine
+    const unsubTick = window.api.onTick(async () => {
+      const { activeCharacterId: charId } = useGameStore.getState();
+      if (charId === null) return;
+
+      try {
+        const result = await window.api.sendQuery({
+          type: "get_character",
+          characterId: charId,
+        });
+        if (result.success && result.character) {
+          useGameStore.setState((state) => ({
+            characters: state.characters.map((c) =>
+              c.id === charId ? result.character : c
+            ),
+          }));
+        }
+      } catch {
+        // Silently ignore tick fetch errors
+      }
+    });
+
+    // On combat events, pipe into combat log
+    const unsubCombat = window.api.onCombatEvents?.((events) => {
+      useGameStore.getState().addCombatEvents(events);
+    });
+
+    // On game events (level up, quest complete, etc.)
+    const unsubEvents = window.api.onGameEvent((event) => {
+      console.log("[GameEvent]", event);
+    });
+
+    return () => {
+      unsubTick();
+      unsubCombat?.();
+      unsubEvents();
+    };
+  }, []);
+
   // Determine what to render
   const hasCharacters = characters.length > 0;
   const showCharacterCreate = !hasCharacters;
