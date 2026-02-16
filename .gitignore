@@ -48,6 +48,9 @@ saves/
 coverage/
 .nyc_output/
 
+# Worktrees
+.worktrees/
+
 # CodeGraphContext
 .cgcignore
 codegraph_viz.html
