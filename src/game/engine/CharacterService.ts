@@ -1,8 +1,9 @@
 import { Kysely, SqliteDialect } from "kysely";
 import type { DatabaseSchema } from "@main/database/schema";
-import type { CharacterState } from "@shared/types";
+import type { CharacterState, EffectiveStats } from "@shared/types";
 import type { RaceName, ClassName, GearSlot, ActivityType } from "@shared/enums";
 import { getClass, getRace } from "@game/data";
+import { InventoryService } from "./InventoryService";
 import type Database from "better-sqlite3";
 
 /**
@@ -233,42 +234,37 @@ export class CharacterService {
 
   /**
    * Convert database row to CharacterState.
+   * Stats are computed at runtime from class definition + level + gear.
    */
   private rowToState(row: any): CharacterState {
-    // Note: stats are not persisted in the database — they are computed at runtime.
-    // For now, we'll use placeholder stats. In production, this would be computed
-    // by the StatCalculator based on equipment, talents, etc.
-    const placeholderStats = {
-      strength: 0,
-      agility: 0,
-      intellect: 0,
-      stamina: 0,
-      spirit: 0,
-      maxHp: 100,
-      maxMana: 100,
-      attackPower: 0,
-      spellPower: 0,
-      armor: 0,
-      critChance: 0,
-      hitChance: 1.0,
-      hastePercent: 0,
-      dodgeChance: 0,
-      parryChance: 0,
-      blockChance: 0,
-      blockValue: 0,
-      defenseSkill: row.level,
-      resilience: 0,
-      mp5: 0,
-      weaponDamageMin: 1,
-      weaponDamageMax: 2,
-      weaponSpeed: 2.0,
-    };
+    const className = row.class_name as ClassName;
+    const classDef = getClass(className);
+    const equipment = JSON.parse(row.equipment);
+
+    let stats: EffectiveStats;
+    if (classDef) {
+      const inventoryService = new InventoryService();
+      stats = inventoryService.recalculateStats(
+        { level: row.level, equipment } as CharacterState,
+        classDef,
+        [] // Equipped item definitions loaded separately
+      );
+    } else {
+      stats = {
+        strength: 0, agility: 0, intellect: 0, stamina: 0, spirit: 0,
+        maxHp: 100, maxMana: 100, attackPower: 0, spellPower: 0, armor: 0,
+        critChance: 0, hitChance: 1.0, hastePercent: 0,
+        dodgeChance: 0, parryChance: 0, blockChance: 0, blockValue: 0,
+        defenseSkill: row.level, resilience: 0, mp5: 0,
+        weaponDamageMin: 1, weaponDamageMax: 2, weaponSpeed: 2.0,
+      };
+    }
 
     return {
       id: row.id,
       name: row.name,
       race: row.race as RaceName,
-      className: row.class_name as ClassName,
+      className,
       level: row.level,
       xp: row.xp,
       restedXp: row.rested_xp,
@@ -277,8 +273,8 @@ export class CharacterService {
       activity: row.activity as ActivityType,
       activeSpec: row.active_spec,
       talentPoints: JSON.parse(row.talent_points),
-      equipment: JSON.parse(row.equipment),
-      stats: placeholderStats,
+      equipment,
+      stats,
       companionClears: JSON.parse(row.companion_clears),
       createdAt: row.created_at,
       lastPlayedAt: row.last_played_at,
