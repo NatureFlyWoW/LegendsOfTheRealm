@@ -1,0 +1,109 @@
+{
+  "health": {
+    "staminaMultiplier": 10
+  },
+  "mana": {
+    "intellectMultiplier": 15
+  },
+  "armorReduction": {
+    "constantBase": 400,
+    "levelMultiplier": 85
+  },
+  "critChance": {
+    "agilityDivisor": 52,
+    "intDivisor": 60,
+    "baseCritSuppression": 0.048
+  },
+  "dodge": {
+    "agilityDivisor": 40,
+    "diminishingReturnThreshold": 30
+  },
+  "parry": {
+    "basePercent": 5
+  },
+  "block": {
+    "basePercent": 5,
+    "strengthDivisor": 20
+  },
+  "ratingConversions": [
+    {
+      "stat": "crit_rating",
+      "ratingPerPercent": 22
+    },
+    {
+      "stat": "hit_rating",
+      "ratingPerPercent": 12.5
+    },
+    {
+      "stat": "haste_rating",
+      "ratingPerPercent": 15
+    },
+    {
+      "stat": "defense_rating",
+      "ratingPerPercent": 2.5
+    },
+    {
+      "stat": "dodge_rating",
+      "ratingPerPercent": 18
+    },
+    {
+      "stat": "parry_rating",
+      "ratingPerPercent": 20
+    },
+    {
+      "stat": "block_rating",
+      "ratingPerPercent": 5
+    },
+    {
+      "stat": "resilience",
+      "ratingPerPercent": 25
+    },
+    {
+      "stat": "spell_hit_rating",
+      "ratingPerPercent": 12.5
+    }
+  ],
+  "caps": [
+    {
+      "stat": "melee_hit",
+      "hardCap": 8,
+      "description": "Melee hit chance caps at 8% against same-level targets (9% for dual-wield due to 19% miss penalty)"
+    },
+    {
+      "stat": "spell_hit",
+      "hardCap": 16,
+      "description": "Spell hit chance caps at 16% against same-level targets (17% for raid bosses with +3 level resistance)"
+    },
+    {
+      "stat": "defense",
+      "softCap": 540,
+      "description": "Defense rating at 540 (defense cap) prevents critical strikes from raid bosses and grants maximum avoidance"
+    },
+    {
+      "stat": "armor",
+      "softCap": 25000,
+      "hardCap": 75000,
+      "description": "Armor has diminishing returns after 25k, becomes extremely inefficient past 75k"
+    },
+    {
+      "stat": "dodge",
+      "softCap": 30,
+      "description": "Dodge chance has diminishing returns after 30%, following a logarithmic curve"
+    },
+    {
+      "stat": "parry",
+      "softCap": 30,
+      "description": "Parry chance has diminishing returns after 30%, following a logarithmic curve"
+    },
+    {
+      "stat": "haste",
+      "softCap": 50,
+      "description": "Haste efficiency drops after 50% due to GCD minimum (1.0s) and practical limitations"
+    },
+    {
+      "stat": "crit",
+      "softCap": 50,
+      "description": "Critical strike chance has practical soft cap at 50% due to diminishing value relative to other stats"
+    }
+  ]
+}
