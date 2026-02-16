@@ -78,9 +78,11 @@ All agents and the main session use CodeGraphContext (CGC) as the primary code n
 ## Custom Agent Rules
 
 When creating or modifying agent definitions in `.claude/agents/`:
-- **NEVER add `mcpServers` to agent frontmatter.** Agents inherit MCP servers (CodeGraphContext, context7, etc.) from the parent session automatically. Specifying them again causes a fatal "Tool names must be unique" API error.
-- **NEVER fall back to `general-purpose` agents** when custom realm-* agents exist. If a realm agent fails, diagnose and fix the agent definition — do not work around it.
-- Agent frontmatter should only contain: `name`, `description`, `model`, `memory`, and `skills`.
+- **ALWAYS include an explicit `tools:` field** — e.g., `tools: Read, Write, Edit, Bash, Glob, Grep`. Without this, agents inherit all parent session tools including MCP duplicates, causing a fatal "Tool names must be unique" API error.
+- **Do NOT use `mcpServers`, `memory`, or `skills`** in agent frontmatter — these can cause tool duplication or other conflicts.
+- Agent frontmatter should only contain: `name`, `description`, `tools`, and `model`.
+- **Agent definitions are cached at session start** — any edits to `.claude/agents/*.md` only take effect after restarting the session.
+- **NEVER fall back to `general-purpose` agents** when custom realm-* agents exist. If realm agents are broken in the current session, use `voltagent-domains:game-developer` or `voltagent-lang:typescript-pro` as capable domain stand-ins until the fix is applied.
 
 ## Shared Types Protocol
 
