@@ -92,6 +92,7 @@ export const useGameStore = create<GameStoreState>((set, get) => ({
         // Reload roster to include new character
         await get().loadRoster();
         // Auto-select the new character
+        window.api.sendCommand({ type: "select_character", characterId: result.characterId });
         set({ activeCharacterId: result.characterId });
       } else {
         // Creation failed but no exception thrown
@@ -104,6 +105,7 @@ export const useGameStore = create<GameStoreState>((set, get) => ({
   },
 
   selectCharacter: (id: number) => {
+    window.api.sendCommand({ type: "select_character", characterId: id });
     set({ activeCharacterId: id });
   },
 

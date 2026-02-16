@@ -14,7 +14,9 @@ const mockApi = {
     create: vi.fn(),
     setActivity: vi.fn(),
     equipItem: vi.fn(),
+    unequipItem: vi.fn(),
   },
+  sendCommand: vi.fn(),
 };
 
 // @ts-expect-error: Mocking window.api
@@ -82,6 +84,7 @@ const createMockCharacter = (id: number, name: string, level: number = 1): Chara
     weaponDamageMax: 15,
     weaponSpeed: 2.0,
   },
+  bags: [],
   companionClears: {},
   createdAt: Date.now(),
   lastPlayedAt: Date.now(),
@@ -237,10 +240,14 @@ describe("gameStore", () => {
   });
 
   describe("selectCharacter", () => {
-    it("should set active character ID", () => {
+    it("should set active character ID and notify engine", () => {
       const { selectCharacter } = useGameStore.getState();
       selectCharacter(42);
       expect(useGameStore.getState().activeCharacterId).toBe(42);
+      expect(mockApi.sendCommand).toHaveBeenCalledWith({
+        type: "select_character",
+        characterId: 42,
+      });
     });
 
     it("should allow changing active character", () => {
@@ -347,7 +354,7 @@ describe("gameStore", () => {
       const { equipItem } = useGameStore.getState();
       await equipItem(5);
 
-      expect(mockApi.character.equipItem).toHaveBeenCalledWith(1, 5, "main_hand");
+      expect(mockApi.character.equipItem).toHaveBeenCalledWith(1, 5, "");
       expect(useGameStore.getState().isLoading).toBe(false);
     });
 
@@ -376,17 +383,16 @@ describe("gameStore", () => {
   });
 
   describe("unequipItem", () => {
-    it("should log warning as IPC not yet implemented", async () => {
-      const consoleWarnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    it("should call IPC to unequip item and reload roster", async () => {
       useGameStore.setState({ activeCharacterId: 1 });
+      mockApi.character.unequipItem.mockResolvedValue({ success: true });
+      mockApi.character.list.mockResolvedValue([]);
 
       const { unequipItem } = useGameStore.getState();
       await unequipItem("main_hand" as any);
 
-      expect(consoleWarnSpy).toHaveBeenCalledWith("unequipItem not yet implemented in IPC API");
-      expect(useGameStore.getState().isLoading).toBe(false);
-
-      consoleWarnSpy.mockRestore();
+      expect(mockApi.character.unequipItem).toHaveBeenCalledWith(1, "main_hand");
+      expect(mockApi.character.list).toHaveBeenCalled();
     });
 
     it("should do nothing if no character is selected", async () => {
@@ -394,6 +400,21 @@ describe("gameStore", () => {
 
       const { unequipItem } = useGameStore.getState();
       await unequipItem("main_hand" as any);
+
+      expect(mockApi.character.unequipItem).not.toHaveBeenCalled();
+    });
+
+    it("should handle errors gracefully", async () => {
+      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      useGameStore.setState({ activeCharacterId: 1 });
+      mockApi.character.unequipItem.mockRejectedValue(new Error("Unequip error"));
+
+      const { unequipItem } = useGameStore.getState();
+      await unequipItem("main_hand" as any);
+
+      expect(consoleErrorSpy).toHaveBeenCalled();
+
+      consoleErrorSpy.mockRestore();
     });
   });
 

@@ -28,7 +28,6 @@ export function AppShell() {
   const setActiveTab = useUIStore((s) => s.setActiveTab);
   const characters = useGameStore((s) => s.characters);
   const activeCharacterId = useGameStore((s) => s.activeCharacterId);
-  const zoneState = useGameStore((s) => s.zoneState);
   const loadRoster = useGameStore((s) => s.loadRoster);
 
   // Load character roster on mount
@@ -187,8 +186,8 @@ export function AppShell() {
               )}
             </div>
 
-            {/* Zone View - persistent bottom panel when grinding */}
-            {activeCharacterId !== null && zoneState && zoneState.grinding && (
+            {/* Zone View - persistent bottom panel when character is selected */}
+            {activeCharacterId !== null && (
               <div className="h-64 border-t border-gray-700">
                 <ZoneView />
               </div>
