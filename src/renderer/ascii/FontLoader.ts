@@ -244,9 +244,6 @@ export const FontLoader = {
         const offCtx = offscreen.getContext("2d")!;
         offCtx.drawImage(img, 0, 0);
 
-        // Read all pixel data once
-        const imageData = offCtx.getImageData(0, 0, img.width, img.height);
-
         resolve({
           cellWidth: glyphW,
           cellHeight: glyphH,
