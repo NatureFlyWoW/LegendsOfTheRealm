@@ -446,3 +446,9 @@ export interface AchievementDefinition {
   };
   isAccountWide: boolean;
 }
+
+// ============================================================
+// Loot Table Definition (re-export from types.ts for naming consistency)
+// ============================================================
+
+export type { LootTable as LootTableDefinition } from "./types";

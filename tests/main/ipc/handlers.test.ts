@@ -1,4 +1,5 @@
 import { describe, test, expect, vi, beforeEach } from "vitest";
+import Database from "better-sqlite3";
 
 // Mock Electron
 vi.mock("electron", () => ({
@@ -10,21 +11,54 @@ vi.mock("electron", () => ({
 import { ipcMain } from "electron";
 import { registerIpcHandlers } from "@main/ipc/handlers";
 import { SaveManager } from "@game/engine/SaveManager";
-import { GameLoop } from "@game/engine/GameLoop";
+import { GameBridge } from "@main/ipc/gamebridge";
 
 describe("IPC Handlers", () => {
   let handlers: Map<string, Function>;
+  let db: Database.Database;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks();
     handlers = new Map();
     (ipcMain.handle as any).mockImplementation((channel: string, handler: Function) => {
       handlers.set(channel, handler);
     });
 
+    db = new Database(":memory:");
+
+    // Create a minimal character table for CharacterService
+    db.exec(`
+      CREATE TABLE characters (
+        id INTEGER PRIMARY KEY,
+        name TEXT NOT NULL,
+        race TEXT NOT NULL,
+        class_name TEXT NOT NULL,
+        level INTEGER NOT NULL DEFAULT 1,
+        xp INTEGER NOT NULL DEFAULT 0,
+        rested_xp INTEGER NOT NULL DEFAULT 0,
+        gold INTEGER NOT NULL DEFAULT 0,
+        current_zone TEXT NOT NULL,
+        activity TEXT,
+        active_spec TEXT,
+        talent_points TEXT NOT NULL,
+        equipment TEXT NOT NULL,
+        companion_clears TEXT NOT NULL,
+        created_at INTEGER NOT NULL,
+        last_played_at INTEGER NOT NULL
+      );
+    `);
+
+    const mockWindow = {
+      webContents: {
+        send: vi.fn(),
+      },
+    } as any;
+
     const saveManager = new SaveManager();
-    const gameLoop = new GameLoop(() => {});
-    registerIpcHandlers(saveManager, gameLoop);
+    const gameBridge = new GameBridge(db, mockWindow);
+    await gameBridge.initialize();
+
+    registerIpcHandlers(saveManager, gameBridge);
   });
 
   test("registers all expected channels", () => {
@@ -36,6 +70,8 @@ describe("IPC Handlers", () => {
     expect(handlers.has("game:stop")).toBe(true);
     expect(handlers.has("game:pause")).toBe(true);
     expect(handlers.has("game:resume")).toBe(true);
+    expect(handlers.has("engine:command")).toBe(true);
+    expect(handlers.has("engine:query")).toBe(true);
   });
 
   test("game:start starts the game loop", async () => {

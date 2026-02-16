@@ -1,5 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useUIStore, type ActiveTab } from "../stores/uiStore";
+import { useGameStore } from "../stores/gameStore";
+import { CharacterCreate } from "./CharacterCreate";
+import { CharacterSheet } from "./CharacterSheet";
+import { CombatLog } from "./CombatLog";
+import { ZoneView } from "./ZoneView";
 
 interface TabDef {
   id: ActiveTab;
@@ -21,6 +26,19 @@ const TABS: TabDef[] = [
 export function AppShell() {
   const activeTab = useUIStore((s) => s.activeTab);
   const setActiveTab = useUIStore((s) => s.setActiveTab);
+  const characters = useGameStore((s) => s.characters);
+  const activeCharacterId = useGameStore((s) => s.activeCharacterId);
+  const zoneState = useGameStore((s) => s.zoneState);
+  const loadRoster = useGameStore((s) => s.loadRoster);
+
+  // Load character roster on mount
+  useEffect(() => {
+    loadRoster();
+  }, [loadRoster]);
+
+  // Determine what to render
+  const hasCharacters = characters.length > 0;
+  const showCharacterCreate = !hasCharacters;
 
   return (
     <div className="flex flex-col h-screen bg-gray-950 text-gray-100 font-mono">
@@ -83,8 +101,59 @@ export function AppShell() {
       </nav>
 
       {/* Content Area */}
-      <main data-testid="main-content" className="flex-1 overflow-hidden p-2">
-        {/* Canvas + panels mount here in Phase 2 */}
+      <main data-testid="main-content" className="flex-1 overflow-hidden flex flex-col">
+        {showCharacterCreate ? (
+          <CharacterCreate />
+        ) : (
+          <>
+            <div className="flex-1 overflow-hidden">
+              {activeTab === "character" && <CharacterSheet />}
+              {activeTab === "combat_log" && <CombatLog />}
+              {activeTab === "inventory" && (
+                <div className="flex items-center justify-center h-full text-gray-400">
+                  Coming in Phase 3
+                </div>
+              )}
+              {activeTab === "talents" && (
+                <div className="flex items-center justify-center h-full text-gray-400">
+                  Coming in Phase 3
+                </div>
+              )}
+              {activeTab === "quests" && (
+                <div className="flex items-center justify-center h-full text-gray-400">
+                  Coming in Phase 3
+                </div>
+              )}
+              {activeTab === "world_map" && (
+                <div className="flex items-center justify-center h-full text-gray-400">
+                  Coming in Phase 3
+                </div>
+              )}
+              {activeTab === "professions" && (
+                <div className="flex items-center justify-center h-full text-gray-400">
+                  Coming in Phase 3
+                </div>
+              )}
+              {activeTab === "achievements" && (
+                <div className="flex items-center justify-center h-full text-gray-400">
+                  Coming in Phase 3
+                </div>
+              )}
+              {activeTab === "settings" && (
+                <div className="flex items-center justify-center h-full text-gray-400">
+                  Coming in Phase 3
+                </div>
+              )}
+            </div>
+
+            {/* Zone View - persistent bottom panel when grinding */}
+            {activeCharacterId !== null && zoneState && zoneState.grinding && (
+              <div className="h-64 border-t border-gray-700">
+                <ZoneView />
+              </div>
+            )}
+          </>
+        )}
       </main>
     </div>
   );
