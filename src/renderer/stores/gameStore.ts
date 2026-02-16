@@ -92,7 +92,8 @@ export const useGameStore = create<GameStoreState>((set, get) => ({
         // Reload roster to include new character
         await get().loadRoster();
         // Auto-select the new character
-        window.api.sendCommand({ type: "select_character", characterId: result.characterId });
+        window.api.sendCommand({ type: "select_character", characterId: result.characterId })
+          .catch((err: unknown) => console.error("Failed to select character in engine:", err));
         set({ activeCharacterId: result.characterId });
       } else {
         // Creation failed but no exception thrown
@@ -105,7 +106,8 @@ export const useGameStore = create<GameStoreState>((set, get) => ({
   },
 
   selectCharacter: (id: number) => {
-    window.api.sendCommand({ type: "select_character", characterId: id });
+    window.api.sendCommand({ type: "select_character", characterId: id })
+      .catch((err: unknown) => console.error("Failed to select character in engine:", err));
     set({ activeCharacterId: id });
   },
 
@@ -153,7 +155,7 @@ export const useGameStore = create<GameStoreState>((set, get) => ({
 
     try {
       // Engine determines correct gear slot from item definition
-      const result = await window.api.character.equipItem(activeCharacterId, bagSlot, "" as GearSlot);
+      const result = await window.api.character.equipItem(activeCharacterId, bagSlot);
       if (result.success) {
         await get().loadRoster();
       }

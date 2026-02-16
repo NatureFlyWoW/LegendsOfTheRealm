@@ -61,11 +61,7 @@ const api = {
       return { success: false, error: "Invalid activity type" };
     },
 
-    equipItem: async (
-      characterId: number,
-      bagSlot: number,
-      gearSlot: GearSlot
-    ) => {
+    equipItem: async (characterId: number, bagSlot: number) => {
       return ipcRenderer.invoke("engine:command", {
         type: "equip_item",
         characterId,

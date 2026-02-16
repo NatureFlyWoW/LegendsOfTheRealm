@@ -16,7 +16,7 @@ const mockApi = {
     equipItem: vi.fn(),
     unequipItem: vi.fn(),
   },
-  sendCommand: vi.fn(),
+  sendCommand: vi.fn().mockResolvedValue({ success: true }),
 };
 
 // @ts-expect-error: Mocking window.api
@@ -354,7 +354,7 @@ describe("gameStore", () => {
       const { equipItem } = useGameStore.getState();
       await equipItem(5);
 
-      expect(mockApi.character.equipItem).toHaveBeenCalledWith(1, 5, "");
+      expect(mockApi.character.equipItem).toHaveBeenCalledWith(1, 5);
       expect(useGameStore.getState().isLoading).toBe(false);
     });
 

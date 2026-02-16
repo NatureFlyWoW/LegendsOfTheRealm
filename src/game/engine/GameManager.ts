@@ -122,6 +122,7 @@ export class GameManager {
       for (const item of result.loot.items) {
         const nextSlot = this.findNextBagSlot(character);
         if (nextSlot !== -1) {
+          item.characterId = character.id;
           item.bagSlot = nextSlot;
           character.bags.push(item);
         }
