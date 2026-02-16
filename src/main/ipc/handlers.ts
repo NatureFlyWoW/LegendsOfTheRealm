@@ -1,8 +1,11 @@
 import { ipcMain } from "electron";
 import type { SaveManager } from "@game/engine/SaveManager";
-import type { GameLoop } from "@game/engine/GameLoop";
+import type { GameBridge } from "./gamebridge";
+import type { EngineCommand, EngineQuery } from "@game/engine/GameManager";
 
-export function registerIpcHandlers(saveManager: SaveManager, gameLoop: GameLoop): void {
+export function registerIpcHandlers(saveManager: SaveManager, gameBridge: GameBridge): void {
+  const gameLoop = gameBridge.getGameLoop();
+  const gameManager = gameBridge.getGameManager();
   ipcMain.handle("save:create", async (_event, name: string) => {
     try {
       saveManager.createSave(name);
@@ -52,5 +55,27 @@ export function registerIpcHandlers(saveManager: SaveManager, gameLoop: GameLoop
   ipcMain.handle("game:resume", async () => {
     gameLoop.resume();
     return { success: true };
+  });
+
+  // ============================================================
+  // Engine Command/Query Handlers
+  // ============================================================
+
+  ipcMain.handle("engine:command", async (_event, cmd: EngineCommand) => {
+    try {
+      const result = await gameManager.handleCommand(cmd);
+      return { success: true, ...result };
+    } catch (e) {
+      return { success: false, error: (e as Error).message };
+    }
+  });
+
+  ipcMain.handle("engine:query", async (_event, query: EngineQuery) => {
+    try {
+      const result = await gameManager.handleQuery(query);
+      return { success: true, ...result };
+    } catch (e) {
+      return { success: false, error: (e as Error).message };
+    }
   });
 }

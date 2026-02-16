@@ -20,6 +20,16 @@ beforeAll(() => {
         resumeGame: vi.fn(),
         getGameState: vi.fn(),
         onTick: vi.fn(() => () => {}),
+        onGameEvent: vi.fn(() => () => {}),
+        sendCommand: vi.fn(),
+        sendQuery: vi.fn(),
+        character: {
+          list: vi.fn(async () => []),
+          create: vi.fn(async () => ({ success: true, characterId: 1 })),
+          setActivity: vi.fn(async () => ({ success: true })),
+          equipItem: vi.fn(async () => ({ success: true })),
+          unequipItem: vi.fn(async () => ({ success: true })),
+        },
       },
     },
     writable: true,
@@ -35,7 +45,7 @@ beforeAll(async () => {
 });
 
 describe("AppShell", () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     // Reset store state before each test
     useUIStore.setState({
       activeTab: "character",
@@ -44,6 +54,17 @@ describe("AppShell", () => {
       modal: null,
       sidebarWidth: 300,
       combatLogVisible: true,
+    });
+
+    const { useGameStore } = await import("@renderer/stores/gameStore");
+    useGameStore.setState({
+      characters: [],
+      activeCharacterId: null,
+      combatEvents: [],
+      zoneState: null,
+      questProgress: [],
+      welcomeBack: null,
+      isLoading: false,
     });
   });
 
@@ -100,5 +121,134 @@ describe("AppShell", () => {
     // Now Inventory should be selected, Character should not
     expect(inventoryTab.getAttribute("aria-selected")).toBe("true");
     expect(characterTab.getAttribute("aria-selected")).toBe("false");
+  });
+
+  it("shows CharacterCreate when no characters exist", async () => {
+    const { useGameStore } = await import("@renderer/stores/gameStore");
+    useGameStore.setState({ characters: [] });
+
+    render(<AppShell />);
+
+    // Should show character creation UI
+    expect(screen.getByText("Create New Character")).toBeDefined();
+  });
+
+  it("shows CharacterSheet on Character tab when characters exist", async () => {
+    const { useGameStore } = await import("@renderer/stores/gameStore");
+    useGameStore.setState({
+      characters: [
+        {
+          id: 1,
+          name: "TestChar",
+          race: "human" as any,
+          className: "warrior" as any,
+          level: 1,
+          xp: 0,
+          stats: {
+            strength: 10,
+            agility: 10,
+            intellect: 10,
+            stamina: 10,
+            spirit: 10,
+            maxHp: 100,
+            maxMana: 100,
+            attackPower: 10,
+            spellPower: 0,
+            critChance: 5,
+            armor: 0,
+          },
+          equipment: {},
+          currentZone: "elwynn_forest",
+        } as any,
+      ],
+      activeCharacterId: 1,
+    });
+
+    render(<AppShell />);
+
+    // Should show character sheet with character name
+    expect(screen.getByText("TestChar")).toBeDefined();
+  });
+
+  it("shows CombatLog on Combat Log tab", async () => {
+    const { useGameStore } = await import("@renderer/stores/gameStore");
+    useGameStore.setState({
+      characters: [
+        {
+          id: 1,
+          name: "TestChar",
+          race: "human" as any,
+          className: "warrior" as any,
+          level: 1,
+          xp: 0,
+          stats: {
+            strength: 10,
+            agility: 10,
+            intellect: 10,
+            stamina: 10,
+            spirit: 10,
+            maxHp: 100,
+            maxMana: 100,
+            attackPower: 10,
+            spellPower: 0,
+            critChance: 5,
+            armor: 0,
+          },
+          equipment: {},
+          currentZone: "elwynn_forest",
+        } as any,
+      ],
+      activeCharacterId: 1,
+    });
+
+    render(<AppShell />);
+
+    // Click Combat Log tab
+    const combatLogTab = screen.getByText("Combat Log");
+    fireEvent.click(combatLogTab);
+
+    // Should show combat log
+    expect(screen.getByTestId("combat-log-container")).toBeDefined();
+  });
+
+  it('shows "Coming in Phase 3" for unimplemented tabs', async () => {
+    const { useGameStore } = await import("@renderer/stores/gameStore");
+    useGameStore.setState({
+      characters: [
+        {
+          id: 1,
+          name: "TestChar",
+          race: "human" as any,
+          className: "warrior" as any,
+          level: 1,
+          xp: 0,
+          stats: {
+            strength: 10,
+            agility: 10,
+            intellect: 10,
+            stamina: 10,
+            spirit: 10,
+            maxHp: 100,
+            maxMana: 100,
+            attackPower: 10,
+            spellPower: 0,
+            critChance: 5,
+            armor: 0,
+          },
+          equipment: {},
+          currentZone: "elwynn_forest",
+        } as any,
+      ],
+      activeCharacterId: 1,
+    });
+
+    render(<AppShell />);
+
+    // Click Inventory tab
+    const inventoryTab = screen.getByText("Inventory");
+    fireEvent.click(inventoryTab);
+
+    // Should show placeholder
+    expect(screen.getByText("Coming in Phase 3")).toBeDefined();
   });
 });
