@@ -19,6 +19,32 @@ An offline, single-player idle/incremental MMORPG inspired by classic 2004-era M
 - **Modular systems**: Character, combat, inventory, crafting, progression as independent modules
 - **Save integrity**: Local save system with versioning and corruption protection
 
+## Code Lookup Workflow (CGC-First)
+All agents and the main session use CodeGraphContext (CGC) as the primary code navigation tool. **Always orient with CGC before reading files.**
+
+### 1. Orient (CGC queries — fast, cheap)
+- `find_code("SymbolName")` — locate functions, interfaces, classes, variables
+- `analyze_code_relationships` — `find_callers`, `find_callees`, `module_deps`, `who_modifies` to trace dependencies
+- `find_most_complex_functions` — identify hotspots when optimizing or refactoring
+- `execute_cypher_query` — custom queries for anything the above don't cover
+
+### 2. Target (Read only what CGC identified)
+- Read specific files and line ranges surfaced by CGC — not entire directories
+- If CGC returns no results for a symbol, fall back to Grep/Glob, then Read
+
+### 3. Look up external APIs (context7)
+- Use context7 to look up library/framework docs when needed (Electron, Kysely, Zustand, React, Vitest, Canvas API, Tailwind, etc.)
+- CGC indexes *our* code; context7 covers *external* APIs and language references
+
+### 4. Implement (Edit with full context)
+- You now know the call graph, dependencies, and related interfaces — edit confidently
+- After changes, use `find_callers` to verify nothing upstream broke
+
+### When to skip CGC
+- Trivial edits where you already know the exact file and line
+- Creating brand-new files with no existing dependencies
+- Non-code tasks (docs, config, data-only JSON)
+
 ## Code Conventions
 - Write clear, self-documenting code — comments only where logic is non-obvious
 - Use descriptive names that match game design terminology (e.g., `talentTree`, `ilvl`, `gearSlot`)

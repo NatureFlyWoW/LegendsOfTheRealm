@@ -50,3 +50,4 @@ coverage/
 
 # CodeGraphContext
 .cgcignore
+codegraph_viz.html
