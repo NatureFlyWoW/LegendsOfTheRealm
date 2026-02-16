@@ -10,7 +10,20 @@ import { RaceName, PrimaryStat } from "@shared/enums";
 export const racialBonusSchema = z.object({
   stat: z.union([
     z.nativeEnum(PrimaryStat),
-    z.enum(["xp_gain", "crit_chance", "dodge_chance", "melee_damage", "shadow_resist", "regen"]),
+    z.enum([
+      "xp_gain",
+      "crit_chance",
+      "dodge_chance",
+      "melee_damage",
+      "shadow_resist",
+      "regen",
+      "armor",
+      "block_chance",
+      "nature_resist",
+      "pet_damage",
+      "crit_from_behind",
+      "fishing",
+    ]),
   ]),
   value: z.number(),
   isPercentage: z.boolean(),

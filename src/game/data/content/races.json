@@ -1,0 +1,154 @@
+[
+  {
+    "id": "human",
+    "name": "Human",
+    "lore": "Adaptable and ambitious, humans are the most populous race in the Shattered Realm. Their versatility and determination have allowed them to thrive in all walks of life, from the battlefield to the workshop. Natural diplomats and quick learners, humans gain experience faster than other races and possess an innate spiritual connection to the world.",
+    "primaryBonus": {
+      "stat": "xp_gain",
+      "value": 5,
+      "isPercentage": true
+    },
+    "secondaryBonus": {
+      "stat": "spirit",
+      "value": 3,
+      "isPercentage": true
+    },
+    "professionBonuses": [
+      {
+        "profession": "diplomacy",
+        "value": 10
+      }
+    ],
+    "icon": "☺"
+  },
+  {
+    "id": "dwarf",
+    "name": "Dwarf",
+    "lore": "Stout and stalwart, dwarves are renowned for their exceptional craftsmanship and unwavering resilience. Born from the mountains themselves, they possess natural toughness and an affinity for metalworking. Their dense musculature and thick skin provide superior protection, making them formidable tanks and warriors. Masters of mining and smithing, dwarves create the finest armor and weapons in the realm.",
+    "primaryBonus": {
+      "stat": "armor",
+      "value": 5,
+      "isPercentage": true
+    },
+    "secondaryBonus": {
+      "stat": "block_chance",
+      "value": 2,
+      "isPercentage": true
+    },
+    "professionBonuses": [
+      {
+        "profession": "mining",
+        "value": 5
+      },
+      {
+        "profession": "blacksmithing",
+        "value": 5
+      }
+    ],
+    "icon": "♂"
+  },
+  {
+    "id": "elf",
+    "name": "Elf",
+    "lore": "Graceful and perceptive, elves are immortal beings with an innate connection to nature and magic. Their keen senses and centuries of experience grant them unparalleled precision in combat. Ancient guardians of the forests, elves move with supernatural agility and strike with deadly accuracy. Their attunement to natural energies provides resistance to nature-based magic and enhances their critical strike capability.",
+    "primaryBonus": {
+      "stat": "crit_chance",
+      "value": 2,
+      "isPercentage": true
+    },
+    "secondaryBonus": {
+      "stat": "nature_resist",
+      "value": 3,
+      "isPercentage": true
+    },
+    "professionBonuses": [
+      {
+        "profession": "herbalism",
+        "value": 5
+      },
+      {
+        "profession": "enchanting",
+        "value": 5
+      }
+    ],
+    "icon": "♀"
+  },
+  {
+    "id": "orc",
+    "name": "Orc",
+    "lore": "Fierce and primal, orcs are savage warriors whose raw strength is legendary. Born for battle, they channel their rage into devastating melee attacks that cleave through enemies. Their shamanistic traditions grant them a deep bond with beasts and spirits, enhancing the combat prowess of their animal companions. Orcs thrive in the heat of combat, their ferocity growing with each strike.",
+    "primaryBonus": {
+      "stat": "melee_damage",
+      "value": 5,
+      "isPercentage": true
+    },
+    "secondaryBonus": {
+      "stat": "pet_damage",
+      "value": 2,
+      "isPercentage": true
+    },
+    "professionBonuses": [
+      {
+        "profession": "skinning",
+        "value": 5
+      },
+      {
+        "profession": "leatherworking",
+        "value": 5
+      }
+    ],
+    "icon": "☻"
+  },
+  {
+    "id": "undead",
+    "name": "Undead",
+    "lore": "Cursed yet cunning, the undead are former mortals who have embraced unlife. Free from the constraints of mortality, they have traded their souls for power over shadow magic. Their undead nature grants immunity to many afflictions and deep resistance to shadow energies. Striking from the darkness, undead excel at exploiting weaknesses, dealing devastating critical strikes when attacking from behind.",
+    "primaryBonus": {
+      "stat": "shadow_resist",
+      "value": 5,
+      "isPercentage": true
+    },
+    "secondaryBonus": {
+      "stat": "crit_from_behind",
+      "value": 3,
+      "isPercentage": true
+    },
+    "professionBonuses": [
+      {
+        "profession": "alchemy",
+        "value": 5
+      },
+      {
+        "profession": "tailoring",
+        "value": 5
+      }
+    ],
+    "icon": "Ω"
+  },
+  {
+    "id": "troll",
+    "name": "Troll",
+    "lore": "Lithe and resourceful, trolls are savage regenerators with incredible survival instincts. Their lanky frames belie surprising agility and their legendary regenerative abilities allow them to recover from grievous wounds. Natural hunters and gatherers, trolls possess uncanny reflexes and an almost supernatural ability to avoid danger. Their affinity with water makes them exceptional fishers and sailors.",
+    "primaryBonus": {
+      "stat": "dodge_chance",
+      "value": 3,
+      "isPercentage": true
+    },
+    "secondaryBonus": {
+      "stat": "fishing",
+      "value": 5,
+      "isPercentage": true
+    },
+    "professionBonuses": [
+      {
+        "profession": "fishing",
+        "value": 10
+      },
+      {
+        "profession": "cooking",
+        "value": 5
+      }
+    ],
+    "icon": "♪"
+  }
+]
