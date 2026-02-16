@@ -1,0 +1,14 @@
+[
+  {
+    "id": "zone_greenhollow_vale",
+    "name": "Greenhollow Vale",
+    "levelRange": { "min": 1, "max": 5 },
+    "theme": "pastoral_farmland",
+    "loreDescription": "Pastoral starter zone with wolf attacks and bandit troubles. Once-peaceful farmlands now threatened by dire wolves from the northern forests and Blackthorn bandits raiding supply routes.",
+    "mobIds": ["mob_cellar_rat", "mob_dire_wolf", "mob_blackthorn_scout", "mob_blackthorn_bandit", "mob_kragg"],
+    "questIds": ["quest_rat_problem", "quest_wolf_menace", "quest_bandit_scouts", "quest_stolen_supplies", "quest_bandit_leader"],
+    "gatheringNodes": [],
+    "rareSpawns": [],
+    "worldDropTable": "loot_greenhollow_world"
+  }
+]

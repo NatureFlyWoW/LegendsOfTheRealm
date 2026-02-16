@@ -75,6 +75,13 @@ All agents and the main session use CodeGraphContext (CGC) as the primary code n
 | `src/shared/` | **shared** | Coordinate across agents |
 | `tests/` | Mirrors `src/` ownership | Each agent owns tests for their domain |
 
+## Custom Agent Rules
+
+When creating or modifying agent definitions in `.claude/agents/`:
+- **NEVER add `mcpServers` to agent frontmatter.** Agents inherit MCP servers (CodeGraphContext, context7, etc.) from the parent session automatically. Specifying them again causes a fatal "Tool names must be unique" API error.
+- **NEVER fall back to `general-purpose` agents** when custom realm-* agents exist. If a realm agent fails, diagnose and fix the agent definition — do not work around it.
+- Agent frontmatter should only contain: `name`, `description`, `model`, `memory`, and `skills`.
+
 ## Shared Types Protocol
 
 When modifying any file in `src/shared/`:

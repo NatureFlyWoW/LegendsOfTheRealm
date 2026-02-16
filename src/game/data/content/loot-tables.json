@@ -1,0 +1,8 @@
+[
+  {"id": "loot_cellar_rat", "guaranteedDrops": [], "rolledDrops": [{"itemId": "item_rat_tooth_dagger", "weight": 10, "minQuantity": 1, "maxQuantity": 1}], "rolledDropCount": 1, "goldRange": {"min": 5, "max": 12}},
+  {"id": "loot_dire_wolf", "guaranteedDrops": [], "rolledDrops": [{"itemId": "item_wolf_pelt_shoulders", "weight": 8, "minQuantity": 1, "maxQuantity": 1}], "rolledDropCount": 1, "goldRange": {"min": 10, "max": 20}},
+  {"id": "loot_blackthorn_scout", "guaranteedDrops": [], "rolledDrops": [{"itemId": "item_bandits_leather_belt", "weight": 12, "minQuantity": 1, "maxQuantity": 1}], "rolledDropCount": 1, "goldRange": {"min": 15, "max": 30}},
+  {"id": "loot_blackthorn_bandit", "guaranteedDrops": [], "rolledDrops": [{"itemId": "item_worn_leather_gloves", "weight": 10, "minQuantity": 1, "maxQuantity": 1}], "rolledDropCount": 1, "goldRange": {"min": 20, "max": 40}},
+  {"id": "loot_kragg", "guaranteedDrops": [], "rolledDrops": [{"itemId": "item_tarnished_silver_ring", "weight": 25, "minQuantity": 1, "maxQuantity": 1}], "rolledDropCount": 1, "goldRange": {"min": 50, "max": 100}},
+  {"id": "loot_greenhollow_world", "guaranteedDrops": [], "rolledDrops": [{"itemId": "item_worn_leather_gloves", "weight": 2, "minQuantity": 1, "maxQuantity": 1}, {"itemId": "item_tarnished_silver_ring", "weight": 1, "minQuantity": 1, "maxQuantity": 1}], "rolledDropCount": 1, "goldRange": {"min": 1, "max": 5}}
+]
