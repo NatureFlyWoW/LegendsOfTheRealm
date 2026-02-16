@@ -212,3 +212,75 @@ export type TalentEffectType =
   | "pet_bonus"
   | "form_bonus"
   | "pushback_resistance";
+
+// ---------------------------------------------------------------------------
+// Weapon Types
+// ---------------------------------------------------------------------------
+
+export enum WeaponType {
+  Sword1H = "sword_1h",
+  Sword2H = "sword_2h",
+  Mace1H = "mace_1h",
+  Mace2H = "mace_2h",
+  Axe1H = "axe_1h",
+  Axe2H = "axe_2h",
+  Dagger = "dagger",
+  Staff = "staff",
+  Polearm = "polearm",
+  Wand = "wand",
+  Bow = "bow",
+  Shield = "shield",
+  OffhandFrill = "offhand_frill",
+}
+
+// ---------------------------------------------------------------------------
+// Armor Types
+// ---------------------------------------------------------------------------
+
+export enum ArmorType {
+  Cloth = "cloth",
+  Leather = "leather",
+  Mail = "mail",
+  Plate = "plate",
+}
+
+// ---------------------------------------------------------------------------
+// Talent Specs — 24 specs (3 per class)
+// Some specs share names across classes, so we suffix with class name
+// where ambiguous (Fire for Mage vs Fire damage type, etc.)
+// ---------------------------------------------------------------------------
+
+export enum TalentSpec {
+  // Warrior
+  Protection = "protection",
+  Arms = "arms",
+  Fury = "fury",
+  // Mage
+  FireMage = "fire",
+  FrostMage = "frost",
+  ArcaneMage = "arcane",
+  // Cleric
+  Holy = "holy",
+  Discipline = "discipline",
+  Retribution = "retribution",
+  // Rogue
+  Assassination = "assassination",
+  Combat = "combat",
+  Subtlety = "subtlety",
+  // Ranger
+  Marksmanship = "marksmanship",
+  BeastMastery = "beast_mastery",
+  Survival = "survival",
+  // Druid
+  RestorationDruid = "restoration_druid",
+  Feral = "feral",
+  Balance = "balance",
+  // Necromancer
+  Affliction = "affliction",
+  Demonology = "demonology",
+  Destruction = "destruction",
+  // Shaman
+  Elemental = "elemental",
+  Enhancement = "enhancement",
+  RestorationShaman = "restoration_shaman",
+}
