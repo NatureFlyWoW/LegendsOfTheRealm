@@ -149,15 +149,14 @@ export const useGameStore = create<GameStoreState>((set, get) => ({
     const { activeCharacterId } = get();
     if (activeCharacterId === null) return;
 
-    set({ isLoading: true });
     try {
-      // For now, we don't know which slot it goes to, so we pass a placeholder
-      // The real implementation will determine this from item template
-      await window.api.character.equipItem(activeCharacterId, bagSlot, "main_hand" as GearSlot);
-      set({ isLoading: false });
+      // Engine determines correct gear slot from item definition
+      const result = await window.api.character.equipItem(activeCharacterId, bagSlot, "" as GearSlot);
+      if (result.success) {
+        await get().loadRoster();
+      }
     } catch (error) {
       console.error("Failed to equip item:", error);
-      set({ isLoading: false });
     }
   },
 
@@ -165,15 +164,11 @@ export const useGameStore = create<GameStoreState>((set, get) => ({
     const { activeCharacterId } = get();
     if (activeCharacterId === null) return;
 
-    set({ isLoading: true });
     try {
-      // IPC to unequip — no matching method in GameAPI yet
-      // This will need to be implemented in the engine
-      console.warn("unequipItem not yet implemented in IPC API");
-      set({ isLoading: false });
+      await window.api.character.unequipItem(activeCharacterId, gearSlot);
+      await get().loadRoster();
     } catch (error) {
       console.error("Failed to unequip item:", error);
-      set({ isLoading: false });
     }
   },
 

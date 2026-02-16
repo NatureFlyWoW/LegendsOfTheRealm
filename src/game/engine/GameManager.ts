@@ -3,7 +3,9 @@ import { Kysely } from "kysely";
 import type { DatabaseSchema } from "@main/database/schema";
 import type { CharacterState, ZoneId, ItemId } from "@shared/types";
 import type { ClassName, RaceName, GearSlot } from "@shared/enums";
+import type { ItemDefinition } from "@shared/definitions";
 import { ActivityType } from "@shared/enums";
+import { getItem, getClass as getClassDef } from "@game/data";
 import { EventBus } from "./EventBus";
 import { CharacterService } from "./CharacterService";
 import { InventoryService } from "./InventoryService";
@@ -208,10 +210,45 @@ export class GameManager {
         if (!character) {
           throw new Error(`Character not found: ${cmd.characterId}`);
         }
-        // TODO: Get item from database and item definition
-        // For now, this is a stub
+
+        // Find item in bags by bagSlot
+        const itemIndex = character.bags.findIndex(i => i.bagSlot === cmd.bagSlot);
+        if (itemIndex === -1) {
+          return { success: false, error: "No item in that bag slot" };
+        }
+        const item = character.bags[itemIndex];
+
+        // Look up item definition to determine gear slot
+        const itemDef = getItem(item.templateId);
+        if (!itemDef) {
+          return { success: false, error: "Item definition not found" };
+        }
+
+        // Equip via InventoryService (updates equipment map)
+        const updatedCharacter = this.inventoryService.equipItem(
+          character, cmd.bagSlot, item, itemDef
+        );
+        Object.assign(character, { equipment: updatedCharacter.equipment });
+
+        // Move item from bag to equipped state
+        const gearSlot = itemDef.slot as GearSlot;
+        item.equippedSlot = gearSlot;
+        const oldBagSlot = item.bagSlot;
+        item.bagSlot = null;
+
+        // If there was an item in that slot, move it to the freed bag slot
+        const displacedItem = character.bags.find(
+          i => i !== item && i.equippedSlot === gearSlot
+        );
+        if (displacedItem) {
+          displacedItem.equippedSlot = null;
+          displacedItem.bagSlot = oldBagSlot;
+        }
+
+        // Recalculate stats with new gear
+        this.recalculateCharacterStats(character);
         this.dirtyCharacters.add(character.id);
-        return { success: true };
+        return { success: true, character };
       }
 
       case "unequip_item": {
@@ -225,10 +262,20 @@ export class GameManager {
           character,
           cmd.gearSlot
         );
-        // Copy updated state back
-        Object.assign(character, updatedCharacter);
+        Object.assign(character, { equipment: updatedCharacter.equipment });
+
+        // Move the unequipped item back to bags
+        const unequippedItem = character.bags.find(i => i.equippedSlot === cmd.gearSlot);
+        if (unequippedItem) {
+          unequippedItem.equippedSlot = null;
+          const nextSlot = this.findNextBagSlot(character);
+          unequippedItem.bagSlot = nextSlot;
+        }
+
+        // Recalculate stats without the removed gear
+        this.recalculateCharacterStats(character);
         this.dirtyCharacters.add(character.id);
-        return { success: true };
+        return { success: true, character };
       }
 
       default:
@@ -283,6 +330,23 @@ export class GameManager {
     const result = this.lastTickResult;
     this.lastTickResult = null;
     return result;
+  }
+
+  /**
+   * Recalculate a character's effective stats from class + level + equipped gear.
+   */
+  private recalculateCharacterStats(character: CharacterState): void {
+    const classDef = getClassDef(character.className);
+    if (!classDef) return;
+
+    const equippedItemDefs = character.bags
+      .filter(i => i.equippedSlot !== null)
+      .map(i => getItem(i.templateId))
+      .filter((d): d is ItemDefinition => d !== undefined);
+
+    character.stats = this.inventoryService.recalculateStats(
+      character, classDef, equippedItemDefs
+    );
   }
 
   /**
