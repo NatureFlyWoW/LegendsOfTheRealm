@@ -13,9 +13,27 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
+    "@electron/rebuild": "^4.0.3",
+    "@tailwindcss/vite": "^4.1.18",
+    "@testing-library/react": "^16.3.2",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^20.0.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "electron": "^40.4.1",
+    "electron-vite": "^5.0.0",
+    "jsdom": "^28.1.0",
+    "tailwindcss": "^4.1.18",
     "typescript": "^5.4.0",
     "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^2.0.0"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.6.2",
+    "kysely": "^0.28.11",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "zod": "^4.3.6",
+    "zustand": "^5.0.11"
   }
 }
