@@ -3,6 +3,7 @@ import type { EngineCommand, EngineQuery } from "@game/engine/GameManager";
 import type { RaceName, ClassName, ActivityType, GearSlot } from "@shared/enums";
 import type { ZoneId } from "@shared/types";
 import type { GameEvent } from "@shared/events";
+import type { CombatEvent } from "@shared/combat-interfaces";
 
 const api = {
   // Save management
@@ -16,9 +17,6 @@ const api = {
   stopGame: () => ipcRenderer.invoke("game:stop"),
   pauseGame: () => ipcRenderer.invoke("game:pause"),
   resumeGame: () => ipcRenderer.invoke("game:resume"),
-
-  // State queries
-  getGameState: () => ipcRenderer.invoke("state:get"),
 
   // Character management
   character: {
@@ -99,6 +97,12 @@ const api = {
     const handler = (_event: unknown, gameEvent: GameEvent) => callback(gameEvent);
     ipcRenderer.on("game:event", handler);
     return () => ipcRenderer.removeListener("game:event", handler);
+  },
+
+  onCombatEvents: (callback: (events: CombatEvent[]) => void) => {
+    const handler = (_event: unknown, events: CombatEvent[]) => callback(events);
+    ipcRenderer.on("game:combat-events", handler);
+    return () => ipcRenderer.removeListener("game:combat-events", handler);
   },
 
   // App info

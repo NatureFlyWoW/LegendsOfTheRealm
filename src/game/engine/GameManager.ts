@@ -10,7 +10,7 @@ import { InventoryService } from "./InventoryService";
 import { ProgressionService } from "./ProgressionService";
 import { LootService } from "./LootService";
 import { QuestTracker } from "./QuestTracker";
-import { ActivityManager } from "./ActivityManager";
+import { ActivityManager, type ActivityTickResult } from "./ActivityManager";
 import { SeededRng } from "@game/rng/SeededRng";
 import type Database from "better-sqlite3";
 
@@ -60,6 +60,7 @@ export class GameManager {
   private dirtyCharacters = new Set<number>();
   private ticksSinceLastSave = 0;
   private readonly AUTO_SAVE_INTERVAL = 60; // Save every 60 ticks (1 minute)
+  private lastTickResult: ActivityTickResult | null = null;
 
   constructor(
     private db: Database.Database,
@@ -104,8 +105,9 @@ export class GameManager {
       return;
     }
 
-    // Process activity tick
+    // Process activity tick and store result for GameBridge to forward
     const result = this.activityManager.onTick(character, this.rng, tickNumber);
+    this.lastTickResult = result;
 
     // Apply character updates from the result
     if (result.characterUpdates) {
@@ -263,6 +265,15 @@ export class GameManager {
    */
   getActiveCharacterId(): number | null {
     return this.activeCharacterId;
+  }
+
+  /**
+   * Get and consume the last tick result (for GameBridge to forward combat events).
+   */
+  getLastTickResult(): ActivityTickResult | null {
+    const result = this.lastTickResult;
+    this.lastTickResult = null;
+    return result;
   }
 
   /**

@@ -53,7 +53,14 @@ export class GameBridge {
    */
   private onTick(tickNumber: number): void {
     this.gameManager.onTick(tickNumber);
-    // Send tick event to renderer
+
+    // Forward combat events from last tick to renderer
+    const lastResult = this.gameManager.getLastTickResult();
+    if (lastResult && lastResult.events.length > 0) {
+      this.window.webContents.send("game:combat-events", lastResult.events);
+    }
+
+    // Send tick number to renderer
     this.window.webContents.send("game:tick", tickNumber);
   }
 
