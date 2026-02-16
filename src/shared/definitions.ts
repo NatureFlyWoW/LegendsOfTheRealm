@@ -19,7 +19,9 @@ import type {
 // ============================================================
 
 export interface RacialBonus {
-  stat: PrimaryStat | "xp_gain" | "crit_chance" | "dodge_chance" | "melee_damage" | "shadow_resist" | "regen";
+  stat: PrimaryStat | "xp_gain" | "crit_chance" | "dodge_chance" | "melee_damage"
+    | "shadow_resist" | "regen" | "armor" | "block_chance" | "nature_resist"
+    | "pet_damage" | "crit_from_behind" | "fishing";
   value: number;
   isPercentage: boolean;
 }
@@ -31,7 +33,7 @@ export interface RaceDefinition {
   primaryBonus: RacialBonus;
   secondaryBonus: RacialBonus;
   professionBonuses: Array<{ profession: string; value: number }>;
-  icon: AsciiIcon;
+  icon: string;
 }
 
 // ============================================================

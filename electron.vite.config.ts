@@ -15,6 +15,11 @@ export default defineConfig({
   },
   preload: {
     plugins: [externalizeDepsPlugin()],
+    build: {
+      lib: {
+        entry: resolve("src/main/preload.ts"),
+      },
+    },
     resolve: {
       alias: {
         "@shared": resolve("src/shared"),
